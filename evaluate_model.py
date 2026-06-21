@@ -8,9 +8,9 @@ from torch.utils.data import DataLoader
 device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 print("Using device:", device)
 
-IMG_SIZE = 224  # MUST MATCH TRAINING
+IMG_SIZE = 224  
 
-# ---------------- TRANSFORM (MUST MATCH TRAINING) ----------------
+# ---------------- TRANSFORM ----------------
 transform = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
@@ -34,7 +34,7 @@ test_loader = DataLoader(
 )
 
 # ---------------- MODEL ----------------
-model = resnet18(weights=None)  # IMPORTANT: no re-download
+model = resnet18(weights=None)  
 model.fc = nn.Linear(model.fc.in_features, 4)
 
 # Load trained weights
@@ -59,5 +59,5 @@ with torch.no_grad():
 
 accuracy = 100 * correct / total
 
-print("\n🎯 Test Accuracy:", round(accuracy, 2), "%")
-print("✅ Classes:", test_dataset.classes)
+print("\nTest Accuracy:", round(accuracy, 2), "%")
+print("Classes:", test_dataset.classes)

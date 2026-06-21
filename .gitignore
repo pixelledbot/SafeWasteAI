@@ -8,7 +8,9 @@ dataset_clean/
 dataset_raw/
 database.db
 procfile
+requirements.txt
 waste_classifier_best.pth
 classes.pth
 logo.png
+report.pdf
 heatmaps/

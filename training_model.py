@@ -11,7 +11,7 @@ import copy
 def main():
 
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print("🔧 Using device:", device)
+    print("Using device:", device)
 
     DATASET_PATH = "dataset_split"
     IMG_SIZE = 224
@@ -43,7 +43,7 @@ def main():
     # ---------------- MODEL ----------------
     model = resnet18(weights=ResNet18_Weights.DEFAULT)
 
-    # 🔥 STRONG FINE-TUNING (BEST PART)
+# STRONG FINE-TUNING STRATEGY: UNFREEZE LAST 2 LAYERS + FC
     for name, param in model.named_parameters():
         if "layer3" in name or "layer4" in name or "fc" in name:
             param.requires_grad = True
@@ -56,14 +56,14 @@ def main():
     # ---------------- LOSS (LABEL SMOOTHING = BETTER ACCURACY) ----------------
     criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
-    # ---------------- OPTIMIZER (BETTER THAN ADAM) ----------------
+    # ---------------- OPTIMIZER ----------------
     optimizer = optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
         lr=0.0003,
         weight_decay=1e-4
     )
 
-    # ---------------- SCHEDULER (MODERN BEST PRACTICE) ----------------
+    # ---------------- SCHEDULER ----------------
     scheduler = optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=8)
 
     epochs = 8
@@ -74,7 +74,7 @@ def main():
 
     for epoch in range(epochs):
 
-        print(f"\n🚀 Epoch {epoch+1}/{epochs}")
+        print(f"\nEpoch {epoch+1}/{epochs}")
 
         model.train()
         correct, total = 0, 0
@@ -128,13 +128,13 @@ def main():
             best_acc = val_acc
             best_model = copy.deepcopy(model.state_dict())
             torch.save(best_model, SAVE_PATH)
-            print("💾 Best model saved!")
+            print("Best model saved!")
 
     model.load_state_dict(best_model)
     torch.save(model.state_dict(), SAVE_PATH)
 
-    print("\n🎯 Training Complete")
-    print("🏆 BEST MODEL SAVED:", SAVE_PATH)
+    print("\nTraining Complete")
+    print("BEST MODEL SAVED:", SAVE_PATH)
 
 
 if __name__ == "__main__":
