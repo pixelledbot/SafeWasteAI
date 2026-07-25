@@ -6,6 +6,8 @@ SafeWaste AI is an AI-powered hospital biomedical waste classification system de
 The system classifies hospital waste images into different biomedical categories and provides disposal instructions instantly.
 
 The project uses a fine-tuned ResNet-18 deep learning model trained on biomedical waste images and includes Grad-CAM heatmap visualization for explainable AI predictions.
+---
+Here is the project demo video link : https://youtu.be/64LebJqiT9E :) 
 
 ---
 
