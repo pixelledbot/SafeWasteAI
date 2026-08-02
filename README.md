@@ -28,6 +28,7 @@ Here is the project demo video link : https://youtu.be/64LebJqiT9E :)
 - Automatic low-confidence email alerts
 - Feedback correction system
 - Responsive modern UI
+- Test Accuracy of 98.71 
 
 ---
 
