@@ -3,7 +3,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torchvision import datasets, transforms
 from torchvision.models import resnet18, ResNet18_Weights
-from torch.utils.data import DataLoader
+from torch.utils.data import DataLoader, WeightedRandomSampler
 import os
 import copy
 
@@ -34,12 +34,56 @@ def main():
                              [0.229, 0.224, 0.225])
     ])
 
-    train_dataset = datasets.ImageFolder(os.path.join(DATASET_PATH, "train"), transform=train_transform)
-    val_dataset   = datasets.ImageFolder(os.path.join(DATASET_PATH, "val"), transform=val_transform)
+    train_dataset = datasets.ImageFolder(
+        os.path.join(DATASET_PATH, "train"),
+        transform=train_transform
+    )
 
-    train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True, num_workers=0)
-    val_loader   = DataLoader(val_dataset, batch_size=16, shuffle=False, num_workers=0)
+    val_dataset = datasets.ImageFolder(
+        os.path.join(DATASET_PATH, "val"),
+        transform=val_transform
+    )
 
+    # ---------- CLASS DISTRIBUTION ----------
+    from collections import Counter
+
+    counts = Counter(train_dataset.targets)
+
+    print("\nClass Distribution:")
+    for idx, cls in enumerate(train_dataset.classes):
+        print(f"{cls}: {counts[idx]}")
+
+    # ---------- DATALOADERS ----------
+    # ---------- WEIGHTED RANDOM SAMPLER ----------
+
+    targets = train_dataset.targets
+
+    class_count = torch.bincount(torch.tensor(targets))
+
+    class_weights_sampler = 1.0 / class_count.float() # high weight for low count classes
+
+    sample_weights = [class_weights_sampler[t] for t in targets]
+
+    sampler = WeightedRandomSampler(
+       weights=sample_weights,
+       num_samples=len(sample_weights),
+       replacement=True
+   )
+
+    train_loader = DataLoader(
+    train_dataset,
+    batch_size=16,
+    sampler=sampler,
+    num_workers=0
+)
+
+    val_loader = DataLoader(
+       val_dataset,
+       batch_size=16,
+       shuffle=False,
+       num_workers=0
+    )
+    
     # ---------------- MODEL ----------------
     model = resnet18(weights=ResNet18_Weights.DEFAULT)
 
@@ -54,8 +98,21 @@ def main():
     model = model.to(device)
 
     # ---------------- LOSS (LABEL SMOOTHING = BETTER ACCURACY) ----------------
-    criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
+    class_counts = torch.bincount(
+    torch.tensor(train_dataset.targets)
+    ).float()
 
+    class_weights = 1.0 / class_counts
+
+    class_weights = (
+       class_weights /
+       class_weights.sum()
+    ) * len(class_weights)
+
+    criterion = nn.CrossEntropyLoss(
+       weight=class_weights.to(device),
+       label_smoothing=0.1
+    )
     # ---------------- OPTIMIZER ----------------
     optimizer = optim.AdamW(
         filter(lambda p: p.requires_grad, model.parameters()),
@@ -70,7 +127,7 @@ def main():
     best_acc = 0
     best_model = copy.deepcopy(model.state_dict())
 
-    SAVE_PATH = "waste_classifier_best.pth"
+    SAVE_PATH = "waste_classifier_balanced.pth"
 
     for epoch in range(epochs):
 

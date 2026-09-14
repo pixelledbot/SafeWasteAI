@@ -1,16 +1,28 @@
 import torch
 import torch.nn as nn
 from torchvision import datasets, transforms
-from torchvision.models import resnet18, ResNet18_Weights
+from torchvision.models import resnet18
 from torch.utils.data import DataLoader
 
-# ---------------- DEVICE ----------------
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-print("Using device:", device)
+from sklearn.metrics import (
+    classification_report,
+    confusion_matrix,
+    ConfusionMatrixDisplay
+)
 
-IMG_SIZE = 224  
+import matplotlib.pyplot as plt
+
+# ---------------- SETTINGS ----------------
+
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
+IMG_SIZE = 224
+
+MODEL_PATH = "waste_classifier_best.pth"
+TEST_PATH = "dataset_split/test"
 
 # ---------------- TRANSFORM ----------------
+
 transform = transforms.Compose([
     transforms.Resize((IMG_SIZE, IMG_SIZE)),
     transforms.ToTensor(),
@@ -21,43 +33,92 @@ transform = transforms.Compose([
 ])
 
 # ---------------- DATASET ----------------
+
 test_dataset = datasets.ImageFolder(
-    root="dataset_split/test",
+    TEST_PATH,
     transform=transform
 )
 
 test_loader = DataLoader(
     test_dataset,
-    batch_size=32,
-    shuffle=False,
-    num_workers=0
+    batch_size=16,
+    shuffle=False
 )
 
 # ---------------- MODEL ----------------
-model = resnet18(weights=None)  
-model.fc = nn.Linear(model.fc.in_features, 4)
 
-# Load trained weights
-model.load_state_dict(torch.load("waste_classifier_best.pth", map_location=device))
+model = resnet18()
 
-model = model.to(device)
+model.fc = nn.Linear(
+    model.fc.in_features,
+    4
+)
+
+model.load_state_dict(
+    torch.load(
+        MODEL_PATH,
+        map_location=device
+    )
+)
+
+model.to(device)
 model.eval()
 
 # ---------------- TESTING ----------------
-correct = 0
-total = 0
+
+all_preds = []
+all_labels = []
 
 with torch.no_grad():
+
     for images, labels in test_loader:
-        images, labels = images.to(device), labels.to(device)
+
+        images = images.to(device)
 
         outputs = model(images)
-        _, predicted = torch.max(outputs, 1)
 
-        total += labels.size(0)
-        correct += (predicted == labels).sum().item()
+        _, preds = torch.max(outputs, 1)
 
-accuracy = 100 * correct / total
+        all_preds.extend(preds.cpu().numpy())
+        all_labels.extend(labels.numpy())
 
-print("\nTest Accuracy:", round(accuracy, 2), "%")
-print("Classes:", test_dataset.classes)
+# ---------------- ACCURACY ----------------
+
+correct = sum(
+    p == l
+    for p, l in zip(all_preds, all_labels)
+)
+
+accuracy = 100 * correct / len(all_labels)
+
+print(f"\nTest Accuracy: {accuracy:.2f}%\n")
+
+# ---------------- REPORT ----------------
+
+print(
+    classification_report(
+        all_labels,
+        all_preds,
+        target_names=test_dataset.classes
+    )
+)
+
+# ---------------- CONFUSION MATRIX ----------------
+
+cm = confusion_matrix(
+    all_labels,
+    all_preds
+)
+
+print("\nConfusion Matrix:\n")
+print(cm)
+
+disp = ConfusionMatrixDisplay(
+    confusion_matrix=cm,
+    display_labels=test_dataset.classes
+)
+
+disp.plot()
+
+plt.title("Confusion Matrix")
+plt.show()
