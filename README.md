@@ -1,35 +1,38 @@
 # SafeWaste AI – Hospital Waste Classification System
 
-## 📌 Overview
+## OVERVIEW
 
 SafeWaste AI is an AI-powered hospital biomedical waste classification system developed using Flask, PyTorch, and Deep Learning.  
 The system classifies hospital waste images into different biomedical categories and provides disposal instructions instantly.
 
 The project uses a fine-tuned ResNet-18 deep learning model trained on biomedical waste images and includes Grad-CAM heatmap visualization for explainable AI predictions.
+---
+Here is the project demo video link : https://youtu.be/64LebJqiT9E :) 
 
 ---
 
-# 🚀 Features
+# FEATURES
 
-- ✅ AI-powered biomedical waste classification
-- ✅ Real-time image prediction
-- ✅ Upload image from device
-- ✅ Live camera capture support
-- ✅ Image cropping before prediction
-- ✅ Grad-CAM heatmap visualization
-- ✅ Prediction confidence score
-- ✅ Automatic disposal instructions
-- ✅ Dashboard analytics
-- ✅ SQLite database integration
-- ✅ PDF report export with images
-- ✅ Email report generation
-- ✅ Automatic low-confidence email alerts
-- ✅ Feedback correction system
-- ✅ Responsive modern UI
+- AI-powered biomedical waste classification
+- Real-time image prediction
+- Upload image from device
+- Live camera capture support
+- Image cropping before prediction
+- Grad-CAM heatmap visualization
+- Prediction confidence score
+- Automatic disposal instructions
+- Dashboard analytics
+- SQLite database integration
+- PDF report export with images
+- Email report generation
+- Automatic low-confidence email alerts
+- Feedback correction system
+- Responsive modern UI
+- Test Accuracy of 98.71 
 
 ---
 
-# 🧠 Waste Categories
+# WASTE CATEGORIES
 
 | Category | Risk Level | Disposal Method |
 |----------|-------------|----------------|
@@ -40,7 +43,7 @@ The project uses a fine-tuned ResNet-18 deep learning model trained on biomedica
 
 ---
 
-# 🏗️ Technologies Used
+# TECHNOLOGIES USED
 
 ## Frontend
 - HTML
@@ -65,7 +68,7 @@ The project uses a fine-tuned ResNet-18 deep learning model trained on biomedica
 
 ---
 
-# 📂 Project Structure
+# PROJECT STRUCTURE
 
 ```bash
 SafeWaste-AI/
@@ -99,10 +102,11 @@ SafeWaste-AI/
 │
 └── README.md
 ```
-
+The files in .gitignore are not included in this repository due to large size or irrelevance.
+The dataset was taken from Kaggle.
 ---
 
-# ⚙️ How the System Works
+# HOW THE SYSTEM WORKS
 
 ## Step 1 — Upload or Capture Image
 User uploads an image or captures waste using live camera.
@@ -137,7 +141,7 @@ Reports are generated with:
 
 ---
 
-# 🧠 Deep Learning Model
+# DEEP LEARNING MODEL
 
 ## Model Architecture
 
@@ -148,7 +152,7 @@ Reports are generated with:
 
 ---
 
-# 🏋️ Model Training
+# MODEL TRAINING
 
 ## Training Techniques Used
 
@@ -160,7 +164,7 @@ Reports are generated with:
 
 ---
 
-# 📊 Image Augmentations
+# IMAGE AUGMENTATION
 
 ```python
 RandomHorizontalFlip
@@ -172,7 +176,7 @@ Normalization
 
 ---
 
-# 📈 Training Details
+# TRAINING DETAILS
 
 | Parameter | Value |
 |-----------|------|
@@ -185,7 +189,7 @@ Normalization
 
 ---
 
-# 🔥 Explainable AI (Grad-CAM)
+# EXPLAINABLE AI (Grad-CAM)
 
 The system generates Grad-CAM heatmaps to visualize:
 - model attention areas
@@ -196,7 +200,7 @@ This improves transparency and trust in AI predictions.
 
 ---
 
-# 📧 Email System
+# EMAIL SYSTEM
 
 The project includes automatic email functionality.
 
@@ -209,7 +213,7 @@ The project includes automatic email functionality.
 
 ---
 
-# 📄 PDF Report Features
+# PDF REPORT FEATURES
 
 Generated reports include:
 
@@ -223,7 +227,7 @@ Generated reports include:
 
 ---
 
-# 🗃️ Database
+# DATABASE
 
 SQLite database stores:
 
@@ -241,7 +245,7 @@ SQLite database stores:
 
 ---
 
-# 📊 Dashboard Features
+# DASHBOARD FEATURES
 
 - Total scans
 - Prediction history
@@ -252,7 +256,7 @@ SQLite database stores:
 
 ---
 
-# 📸 Camera Features
+# CAMERA FEATURES
 
 - Live camera capture
 - Real-time preview
@@ -262,7 +266,7 @@ SQLite database stores:
 
 ---
 
-# 🔐 Security Features
+# SECURITY FEATURES
 
 - File validation
 - Secure image handling
@@ -272,7 +276,7 @@ SQLite database stores:
 
 ---
 
-# 🚀 Installation
+# INSTALLATION
 
 ## Step 1 — Clone Project
 
@@ -328,7 +332,7 @@ python app.py
 
 ---
 
-# 🌐 Access Application
+# ACCESS APPLICATION (not deployed yet)
 
 Open browser:
 
@@ -338,7 +342,7 @@ http://127.0.0.1:5000
 
 ---
 
-# 🏋️ Train Model
+# TRAIN MODEL
 
 Run:
 
@@ -354,7 +358,7 @@ waste_classifier_best.pth
 
 ---
 
-# 📋 Requirements
+# REQUIREMENTS
 
 ```txt
 flask
@@ -369,7 +373,7 @@ reportlab
 
 ---
 
-# 🎯 Future Improvements
+# FUTURE IMPROVEMENTS
 
 - Multi-waste detection
 - Real-time CCTV integration
@@ -380,13 +384,13 @@ reportlab
 
 ---
 
-# 👩‍💻 Developers
+# DEVELOPERS
 
 Developed by Simran Kaur, Simran Kaur and Harjot Kaur
 
 ---
 
-# 📜 License
+# LICENSE
 
 This project is developed for educational and research purposes.
 
